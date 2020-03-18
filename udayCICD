@@ -1,24 +1,3 @@
-Skip to content
-Search or jump to…
-
-Pull requests
-Issues
-Marketplace
-Explore
- 
-@UdayaKumar1 
-IBM108
-/
-maven-web-application
-forked from MithunTechnologiesDevOps/maven-web-application
-0
-0581
- Code Pull requests 0 Actions Projects 0 Wiki Security Insights Settings
-maven-web-application/udayCICD
-@UdayaKumar1 UdayaKumar1 Create udayCICD
-1a9f264 11 minutes ago
-46 lines (36 sloc)  1.1 KB
-  
 node{
 
 echo "BranchName ${env.BRANCH_NAME}"
