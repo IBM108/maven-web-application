@@ -1,0 +1,67 @@
+Skip to content
+Search or jump to…
+
+Pull requests
+Issues
+Marketplace
+Explore
+ 
+@UdayaKumar1 
+IBM108
+/
+maven-web-application
+forked from MithunTechnologiesDevOps/maven-web-application
+0
+0581
+ Code Pull requests 0 Actions Projects 0 Wiki Security Insights Settings
+maven-web-application/udayCICD
+@UdayaKumar1 UdayaKumar1 Create udayCICD
+1a9f264 11 minutes ago
+46 lines (36 sloc)  1.1 KB
+  
+node{
+
+echo "BranchName ${env.BRANCH_NAME}"
+echo "workspace area ${env.WORKSPACE}"
+echo "Jenkins home dir ${env.JENKINS_HOME}"
+echo "Job name ${env.JOB_NAME}"
+echo "show Jenkins url ${env.JENKINS_URL}"
+echo "show build url ${env.BUILD_URL}"
+echo "show job name ${env.JOB_NAME}"
+echo "show build id ${env.BUILD_ID}"
+
+def mavenHome = tool name: "maven3.6.3"
+
+stage('CheckoutCode') {
+git credentialsId: '53cc36ee-5f6a-40c4-9086-bd70456b0b67', url: 'https://github.com/IBM108/maven-web-application.git'    
+
+}
+stage('Build'){
+sh "${mavenHome}/bin/mvn clean package"
+}
+
+stage('SonarQubeReport'){
+sh "${mavenHome}/bin/mvn sonar:sonar"
+}
+
+stage('UploadArtifactintoNexus'){
+sh "${mavenHome}/bin/mvn deploy"
+}
+
+stage('DeployAppintoTomcat')
+{
+sshagent(['2a944bd0-b173-41c6-8b20-167e46596ffe'])
+{
+sh "scp -o StrictHostKeyChecking=no /var/lib/jenkins/workspace/pipeline-script-demo/target/maven-web-application.war ec2-user@18.141.143.215:/opt/apache-tomcat-9.0.31/webapps"
+}
+}
+stage('SendEmailNotification')
+{
+ emailext body: '''build is over done by uday kumar
+
+
+done 
+uday ''', subject: 'Build is over', to: 'uknaidu57@gmail.com'   
+}
+
+}
